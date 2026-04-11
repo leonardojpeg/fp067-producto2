@@ -1,56 +1,126 @@
-<h2 class="section-title">Detalle del jugador</h2>
+<h2 class="section-title">{{ isCreating ? 'Crear Nuevo Jugador' : 'Detalle del jugador' }}</h2>
 
 <div *ngIf="player; else noSelection" class="detail-card">
-  <div class="detail-top">
-    <div class="detail-image-wrapper">
-      <img
-        [src]="player.imagen"
-        [alt]="player.nombre"
-        class="detail-image"
-      />
+  
+  <ng-container *ngIf="!isEditing; else editMode">
+    <!-- MODO LECTURA (VISTA NORMAL) -->
+    <div class="detail-top">
+      <div class="detail-image-wrapper">
+        <img
+          [src]="player.imagen || 'assets/images/placeholder.jpg'"
+          [alt]="player.nombre"
+          class="detail-image"
+        />
+      </div>
+
+      <div class="detail-heading">
+        <span class="detail-team">{{ player.equipo }}</span>
+        <h3>{{ player.nombre }} {{ player.apellidos }}</h3>
+        <span class="detail-position">{{ player.posicion }}</span>
+      </div>
     </div>
 
-    <div class="detail-heading">
-      <span class="detail-team">{{ player.equipo }}</span>
-      <h3>{{ player.nombre }} {{ player.apellidos }}</h3>
-      <span class="detail-position">{{ player.posicion }}</span>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <span class="stat-label">Edad</span>
+        <span class="stat-value">{{ player.edad }}</span>
+      </div>
+
+      <div class="stat-box">
+        <span class="stat-label">Altura</span>
+        <span class="stat-value">{{ player.altura }}</span>
+      </div>
+
+      <div class="stat-box">
+        <span class="stat-label">Dorsal</span>
+        <span class="stat-value">#{{ player.dorsal }}</span>
+      </div>
+
+      <div class="stat-box">
+        <span class="stat-label">Posición</span>
+        <span class="stat-value">{{ player.posicion }}</span>
+      </div>
     </div>
-  </div>
 
-  <div class="stats-grid">
-    <div class="stat-box">
-      <span class="stat-label">Edad</span>
-      <span class="stat-value">{{ player.edad }}</span>
+    <div class="detail-info">
+      <p><strong>Equipo:</strong> {{ player.equipo }}</p>
+      <p><strong>Nombre:</strong> {{ player.nombre }} {{ player.apellidos }}</p>
+      <p><strong>Estado:</strong> {{ player.estado }}</p>
+      <p><strong>Perfil:</strong> {{ player.perfil }}</p>
     </div>
 
-    <div class="stat-box">
-      <span class="stat-label">Altura</span>
-      <span class="stat-value">{{ player.altura }}</span>
+    <div class="detail-actions">
+      <button class="btn btn-primary" (click)="toggleEdit()">✏️ Editar</button>
+      <button class="btn btn-secondary close-btn" (click)="close()">Cerrar detalle</button>
     </div>
+  </ng-container>
 
-    <div class="stat-box">
-      <span class="stat-label">Dorsal</span>
-      <span class="stat-value">#{{ player.dorsal }}</span>
+  <ng-template #editMode>
+    <!-- MODO EDICIÓN / CREACIÓN -->
+    <div class="edit-form" *ngIf="editData">
+      <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" [(ngModel)]="editData.nombre" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Apellidos</label>
+        <input type="text" [(ngModel)]="editData.apellidos" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Equipo</label>
+        <input type="text" [(ngModel)]="editData.equipo" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Posición</label>
+        <select [(ngModel)]="editData.posicion" class="form-control">
+          <option *ngFor="let pos of positions" [value]="pos">{{ pos }}</option>
+        </select>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group" style="flex:1;">
+          <label>Edad</label>
+          <input type="number" [(ngModel)]="editData.edad" class="form-control" />
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label>Altura</label>
+          <input type="text" [(ngModel)]="editData.altura" class="form-control" placeholder="1.95 m" />
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label>Dorsal</label>
+          <input type="number" [(ngModel)]="editData.dorsal" class="form-control" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Estado</label>
+        <select [(ngModel)]="editData.estado" class="form-control">
+          <option value="Disponible">Disponible</option>
+          <option value="Lesionado">Lesionado</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>URL Imagen</label>
+        <input type="text" [(ngModel)]="editData.imagen" class="form-control" placeholder="assets/images/... o http..." />
+      </div>
+      
+      <div class="form-group">
+        <label>Perfil (Descripción)</label>
+        <textarea [(ngModel)]="editData.perfil" class="form-control" rows="3"></textarea>
+      </div>
+
+      <div class="detail-actions">
+        <button class="btn btn-primary" (click)="saveChanges()">💾 Guardar</button>
+        <button class="btn btn-secondary close-btn" (click)="cancelEdit()">Cancelar</button>
+      </div>
     </div>
+  </ng-template>
 
-    <div class="stat-box">
-      <span class="stat-label">Posición</span>
-      <span class="stat-value">{{ player.posicion }}</span>
-    </div>
-  </div>
-
-  <div class="detail-info">
-    <p><strong>Equipo:</strong> {{ player.equipo }}</p>
-    <p><strong>Nombre:</strong> {{ player.nombre }} {{ player.apellidos }}</p>
-    <p><strong>Estado:</strong> {{ player.estado }}</p>
-    <p><strong>Perfil:</strong> {{ player.perfil }}</p>
-  </div>
-
-  <button class="close-btn" (click)="close()">Cerrar detalle</button>
 </div>
 
 <ng-template #noSelection>
   <div class="empty-state">
-    <p>Selecciona un jugador para ver su detalle.</p>
+    <p>Selecciona un jugador para ver su detalle o crear uno nuevo.</p>
   </div>
 </ng-template>
