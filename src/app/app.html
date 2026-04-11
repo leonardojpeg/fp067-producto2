@@ -9,13 +9,17 @@
 
 <main class="app-layout">
   <section class="panel players-panel">
-    <app-players (playerSelected)="onPlayerSelected($event)"></app-players>
+    <app-players 
+      (playerSelected)="onPlayerSelected($event)"
+      (createNew)="handleCreateNew()"
+    ></app-players>
   </section>
 
   <section class="right-column">
     <div class="panel detail-panel">
       <app-detail
         [player]="selectedPlayer"
+        [isCreating]="isCreating"
         (closeDetail)="clearSelection()"
       ></app-detail>
     </div>

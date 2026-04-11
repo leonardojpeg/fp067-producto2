@@ -1,4 +1,10 @@
-<h2 class="section-title">Jugadores</h2>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h2 class="section-title">Jugadores</h2>
+  <div class="actions">
+    <button class="btn btn-primary" (click)="onNewPlayer()">+ Añadir jugador</button>
+    <button class="btn btn-secondary" (click)="onSeedDatabase()">Migrar datos iniciales</button>
+  </div>
+</div>
 
 <div class="filters-box">
   <div class="filter-group">
@@ -29,8 +35,11 @@
     (click)="selectPlayer(player)"
   >
     <div class="player-main">
-      <h3>{{ player.nombre }} {{ player.apellidos }}</h3>
-      <span class="badge-position">{{ player.posicion }}</span>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <h3>{{ player.nombre }} {{ player.apellidos }}</h3>
+        <span class="badge-position">{{ player.posicion }}</span>
+      </div>
+      <button class="delete-btn" (click)="deletePlayer($event, player.id)" title="Borrar jugador">🗑</button>
     </div>
 
     <p><strong>Equipo:</strong> {{ player.equipo }}</p>
